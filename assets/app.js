@@ -1,0 +1,1 @@
+document.querySelectorAll('[data-copy]').forEach(btn=>btn.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(btn.dataset.copy);const old=btn.textContent;btn.textContent='¡Copiado!';setTimeout(()=>btn.textContent=old,1400);}catch(e){prompt('Copia este enlace:',btn.dataset.copy);}}));

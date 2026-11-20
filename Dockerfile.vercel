@@ -36,8 +36,7 @@ COPY --from=dependencies /app/vendor ./vendor
 
 COPY . .
 
-COPY Caddyfile /etc/frankenphp/Caddyfile
-
+COPY Caddyfile /etc/caddy/Caddyfile
 ENV PORT=80
 
-CMD ["frankenphp", "run", "--config", "/etc/frankenphp/Caddyfile"]
+CMD ["frankenphp", "run", "--config", "/etc/caddy/Caddyfile"]

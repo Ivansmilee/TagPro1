@@ -1,0 +1,32 @@
+
+# Dependencias y archivos generados
+/vendor/
+/node_modules/
+/.vercel/
+
+# Variables de entorno
+.env
+.env.*
+!.env.example
+
+# Credenciales y claves privadas
+*credentials*.json
+*service-account*.json
+*.pem
+*.key
+
+# Respaldos y archivos temporales
+/backups/
+/backup/
+*.log
+*.zip
+*-backup.sql
+*-dump.sql
+
+# Scripts locales de pruebas y migración
+/preparar_migracion.php
+/migrar_firestore.php
+/probar_firestore.php
+/probar_datos_firestore.php
+
+/probar_sesiones_firestore.php

@@ -1,0 +1,25 @@
+
+:{$PORT:80} {
+    root * /app
+    encode zstd gzip
+
+    route {
+        # Bloquear archivos y carpetas internos.
+        @privados path /includes /includes/* /vendor /vendor/* /config.php /composer.json /composer.lock /database.sql /README.md /Dockerfile.vercel /Caddyfile /.git* /.dockerignore /.env* /.htaccess /preparar_migracion.php /migrar_firestore.php /probar_firestore.php /probar_datos_firestore.php
+        respond @privados 404
+
+        # Solo permitir ejecutar los PHP públicos de TagPro.
+        @php_bloqueado {
+            path *.php
+            not path /index.php /login.php /logout.php /create.php /edit.php /delete.php /design.php /redirect.php
+        }
+        respond @php_bloqueado 404
+
+        # Conservar los enlaces originales de QR y NFC.
+        @qr path_regexp qr ^/r/([a-f0-9]{10})$
+        rewrite @qr /redirect.php?code={re.qr.1}
+
+        # Ejecutar PHP y servir los recursos estáticos.
+        php_server
+    }
+}

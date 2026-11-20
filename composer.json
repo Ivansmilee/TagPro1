@@ -1,0 +1,10 @@
+
+{
+    "name": "tagpro/tagpro-qr",
+    "description": "Sistema de gestión de QR dinámicos",
+    "type": "project",
+    "require": {
+        "google/auth": "^1.55"
+    },
+    "license": "proprietary"
+}

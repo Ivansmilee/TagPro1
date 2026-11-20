@@ -1,0 +1,43 @@
+
+FROM dunglas/frankenphp:1-php8.3-bookworm AS base
+
+WORKDIR /app
+
+# Configuración de PHP para producción
+RUN cp "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" \
+    && install-php-extensions curl opcache
+
+# Instalar dependencias de Composer
+FROM base AS dependencies
+
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends unzip \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY composer.json composer.lock ./
+
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
+RUN composer install \
+    --no-dev \
+    --no-interaction \
+    --prefer-dist \
+    --no-progress \
+    --optimize-autoloader
+
+# Imagen final de producción
+FROM base AS runtime
+
+WORKDIR /app
+
+COPY --from=dependencies /app/vendor ./vendor
+
+COPY . .
+
+COPY Caddyfile /etc/frankenphp/Caddyfile
+
+ENV PORT=80
+
+CMD ["frankenphp", "run", "--config", "/etc/frankenphp/Caddyfile"]

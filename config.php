@@ -10,13 +10,20 @@ define('DB_PASS', '');
 
 // URL de la aplicación.
 // En Vercel se configurará mediante la variable APP_URL.
-define(
-    'APP_URL',
-    rtrim(
-        getenv('APP_URL') ?: 'http://localhost/tagpro_qr_dinamico',
-        '/'
-    )
-);
+$appUrl = getenv('APP_URL');
+
+if ($appUrl === false || trim($appUrl) === '') {
+    $vercelHost = getenv('VERCEL_PROJECT_PRODUCTION_URL')
+        ?: getenv('VERCEL_URL');
+
+    if ($vercelHost) {
+        $appUrl = 'https://' . $vercelHost;
+    } else {
+        $appUrl = 'http://localhost/tagpro_qr_dinamico';
+    }
+}
+
+define('APP_URL', rtrim($appUrl, '/'));
 
 define('APP_NAME', 'TagPro QR');
 
